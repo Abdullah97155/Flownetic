@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, render_template, request, jsonify
 import pandas as pd
 from datetime import datetime
 import os
@@ -6,7 +6,7 @@ import os
 app = Flask(__name__)
 FILE_NAME = "leads.xlsx"
 
-# Save lead info (not yet used by UI but ready)
+# Save lead info
 def save_lead(name, phone, email, description):
     data = {
         "Date": [datetime.now().strftime("%Y-%m-%d %H:%M")],
@@ -26,7 +26,7 @@ def save_lead(name, phone, email, description):
 
     updated.to_excel(FILE_NAME, index=False)
 
-# Basic response logic
+# Simple intent detection
 def get_response(message):
     msg = message.lower()
 
@@ -45,8 +45,7 @@ def get_response(message):
 
 @app.route("/")
 def index():
-    # Serve index.html from same directory
-    return send_file("index.html")
+    return render_template("index.html")
 
 @app.route("/chat", methods=["POST"])
 def chat():
